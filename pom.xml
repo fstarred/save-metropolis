@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://maven.apache.org/POM/4.0.0">
+    <!-- @version $Revision: 2870 $ ($Author: vlads $) $Date: 2008-12-26 19:20:33 -0500 (Fri, 26 Dec 2008) $ -->
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>it.starred.game</groupId>
+    <artifactId>savemetropolis</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <name>Save Metropolis</name>
+
+    <organization>
+        <name>Starred MediaSoft</name>
+    </organization>
+
+    <properties>
+        <me2Version>2.0.3</me2Version><!--me-version-->
+        <j2me.plugin.version>2.0.4</j2me.plugin.version>
+
+        <wtk.home>${env.wtkhome}</wtk.home>
+
+        <j2me.midlet.vendor>${project.organization.name}</j2me.midlet.vendor>
+        <j2me.midlet.name>${project.name}</j2me.midlet.name>
+        <j2me.midlet.version>1.0-SNAPSHOT</j2me.midlet.version>
+        <j2me.midlet.configuration>CLDC-1.0</j2me.midlet.configuration>
+        <j2me.midlet.profile>MIDP-1.0</j2me.midlet.profile>
+
+        <!-- See other properties http://antenna.sourceforge.net/index.php#setup
+        <wtk.bluetooth.enabled>true</wtk.bluetooth.enabled>
+        <wtk.wma.enabled>true</wtk.wma.enabled>
+        <wtk.wma.version>2.0</wtk.wma.version>
+        <wtk.locationservices.enabled>true</wtk.locationservices.enabled>
+        <wtk.optionalpda.enabled>true</wtk.optionalpda.enabled>
+        -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>org.microemu</groupId>
+            <artifactId>microemulator</artifactId>
+            <version>${me2Version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Uncomment for wma
+        <dependency>
+            <groupId>org.microemu</groupId>
+            <artifactId>microemu-jsr-120</artifactId>
+            <version>${me2Version}</version>
+            <scope>provided</scope>
+        </dependency>
+        -->
+
+        <!-- Uncomment for JSR-82
+        <dependency>
+            <groupId>net.sf.bluecove</groupId>
+            <artifactId>bluecove</artifactId>
+            <version>2.1.0</version>
+            <scope>provided</scope>
+        </dependency>
+        -->
+
+        <!-- Use system scope for jars from WTK
+        <dependency>
+            <groupId>come.sun.wtk</groupId>
+            <artifactId>jsr082</artifactId>
+            <version>2.2</version>
+            <scope>system</scope>
+            <systemPath>${WTK_HOME}/lib/jsr082.jar</systemPath>
+        </dependency>
+        -->
+
+    </dependencies>
+
+    <build>
+        <finalName>savemetropolis</finalName>
+        <defaultGoal>install</defaultGoal>
+
+        <plugins>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.0.2</version>
+                <configuration>
+                    <source>1.3</source>
+                    <target>1.1</target>
+                    <compilerArguments>
+                        <bootclasspath>
+                            ${settings.localRepository}/org/microemu/cldcapi11/${me2Version}/cldcapi11-${me2Version}.jar${path.separator}${settings.localRepository}/org/microemu/midpapi20/${me2Version}/midpapi20-${me2Version}.jar
+                        </bootclasspath>
+                    </compilerArguments>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.microemu</groupId>
+                        <artifactId>midpapi20</artifactId>
+                        <version>${me2Version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
+            <plugin>
+                <groupId>com.pyx4me</groupId>
+                <artifactId>j2me-maven-plugin</artifactId>
+                <version>${j2me.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>package</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <wtkHome>${wtk.home}</wtkHome>
+                    <proguardInclude>proguard.conf</proguardInclude>
+                    <proguard>false</proguard>
+                    <obfuscate>true</obfuscate>
+                    <jadAttributes>
+                        <MIDlet-Vendor>${project.organization.name}</MIDlet-Vendor>
+                        <Created-By>Fabrizio Stellato</Created-By>
+                        <!--                        <MIDlet-Permissions>javax.microedition.io.Connector.http</MIDlet-Permissions>-->
+                        <!--
+                        To ask the platform to optionally grant permissions provided certain API-subsets are available, use:
+                        <MIDlet-Permissions-Opt>javax.wireless.messaging.sms.receive,javax.wireless.messaging.sms.send</MIDlet-Permissions-Opt>
+                        -->
+                    </jadAttributes>
+                    <midlets>
+                        <!-- for each MIDlet entry-point, simply reiterate this section -->
+                        <MIDlet>
+                            <name>${project.name}</name>
+                            <icon>/icon</icon>
+                            <class>game.Game</class>
+                        </MIDlet>
+                    </midlets>
+                    <!-- If you are going to use ProGuard instead of WTK
+                    <useWtkLibs>false</useWtkLibs>
+                    <libs>
+                        <lib>${settings.localRepository}/org/microemu/cldcapi11/${me2Version}/cldcapi11-${me2Version}.jar</lib>
+                        <lib>${settings.localRepository}/org/microemu/midpapi20/${me2Version}/midpapi20-${me2Version}.jar</lib>
+                    </libs>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.microemu</groupId>
+                            <artifactId>microemulator</artifactId>
+                            <exclude>true</exclude>
+                        </dependency>
+                    </dependencies>
+                    -->
+                </configuration>
+            </plugin>
+
+<!--            <plugin>-->
+<!--                <groupId>com.pyx4me</groupId>-->
+<!--                <artifactId>obex-maven-plugin</artifactId>-->
+<!--                <version>2.0.4</version>-->
+<!--                <configuration>-->
+<!--                    <jarfile>savemetropolis.jar</jarfile>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
+
+        </plugins>
+    </build>
+
+</project>
+
