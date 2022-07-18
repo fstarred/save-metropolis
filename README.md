@@ -1,5 +1,5 @@
 # Save Metropolis
-A 2006 MIDlet game - Could an helicopter save the world from the alien invasion ?
+A 2006 MIDlet game - Will an helicopter save the world from the alien invasion ?
 
 ![screenshot](https://github.com/fstarred/save-metropolis/blob/master/docs/picture.jpg?raw=true) 
 
